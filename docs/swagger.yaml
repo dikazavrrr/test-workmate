@@ -1,0 +1,83 @@
+basePath: /
+definitions:
+  domain.Task:
+    properties:
+      created_at:
+        type: string
+      error:
+        type: string
+      id:
+        type: string
+      result:
+        type: string
+      status:
+        $ref: '#/definitions/domain.TaskStatus'
+      updated_at:
+        type: string
+    type: object
+  domain.TaskStatus:
+    enum:
+    - pending
+    - running
+    - done
+    - failed
+    type: string
+    x-enum-varnames:
+    - StatusPending
+    - StatusRunning
+    - StatusDone
+    - StatusFailed
+host: localhost:8080
+info:
+  contact: {}
+  description: Простой сервис для задач
+  title: Test Workmate API
+  version: "1.0"
+paths:
+  /tasks:
+    post:
+      consumes:
+      - application/json
+      description: Создает новую задачу и возвращает её ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Создать задачу
+      tags:
+      - tasks
+  /tasks/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает задачу по ID
+      parameters:
+      - description: ID задачи
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Task'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Получить задачу
+      tags:
+      - tasks
+swagger: "2.0"
